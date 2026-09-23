@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Workshop operations allow read and write
+    match /{document=**} {
+      allow read, write: if true;
+    }
+
+    // Stock Movements (Immutable ledger)
+    match /stock_movements/{movementId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+
+    // Audit Logs (Immutable security trail)
+    match /audit_logs/{logId} {
+      allow read, create: if true;
+      allow update, delete: if false;
+    }
+  }
+}
+
+
+

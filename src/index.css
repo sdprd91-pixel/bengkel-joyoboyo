@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Custom Scrollbar for sleek light theme */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #f97316;
+  }
+}
+
+/* Print CSS setup for Thermal Receipt Printers (58mm/80mm) & Reports */
+@media print {
+  * {
+    box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html,
+  body,
+  #root {
+    display: block !important;
+    position: static !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset all fixed modal backdrops and flex/overflow containers */
+  .fixed,
+  [class*="fixed"],
+  [class*="overflow-"],
+  [class*="max-h-"] {
+    position: static !important;
+    display: block !important;
+    overflow: visible !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #printable-thermal-receipt,
+  #printable-thermal-receipt * {
+    visibility: visible !important;
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    font-weight: 700 !important;
+    border-color: #000000 !important;
+  }
+
+  /* Keep text in white background badge pure white when printed */
+  #printable-thermal-receipt .bg-black,
+  #printable-thermal-receipt .bg-black * {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
+
+  #printable-thermal-receipt {
+    display: block !important;
+    position: relative !important;
+    margin: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 0 30mm 0 !important; /* Generous safe bottom buffer so printer cutter/tear bar never cuts kembalian/footer */
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 0.01em !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    box-sizing: border-box !important;
+    zoom: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    page-break-after: auto !important;
+  }
+
+  @page {
+    margin: 0mm !important;
+    size: auto;
+  }
+}
+

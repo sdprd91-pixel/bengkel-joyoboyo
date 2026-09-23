@@ -1,0 +1,6 @@
+{
+  "name": "Bengkel Motor Joyoboyo Yuwanain Arso II",
+  "description": "Aplikasi manajemen servis, inventaris sparepart, penggajian karyawan, dan cetak struk termal untuk Bengkel Motor Joyoboyo Yuwanain Arso II.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

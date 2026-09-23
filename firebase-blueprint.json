@@ -1,0 +1,255 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User accounts with roles and permissions (passwords handled exclusively via Firebase Auth)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "username": { "type": "string" },
+        "role": { "type": "string" },
+        "allowedTabs": { "type": "array" }
+      },
+      "required": ["id", "name", "username", "role"]
+    },
+    "Sparepart": {
+      "title": "Sparepart",
+      "description": "Inventory spareparts, oils and consumables",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "buyPrice": { "type": "number" },
+        "sellPrice": { "type": "number" },
+        "wholesalePrice": { "type": "number" },
+        "stock": { "type": "number" },
+        "minStock": { "type": "number" },
+        "rackLocation": { "type": "string" },
+        "unit": { "type": "string" },
+        "supplier": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "lastUpdated": { "type": "string" }
+      },
+      "required": ["id", "code", "name", "category", "buyPrice", "sellPrice", "stock", "minStock", "rackLocation", "unit", "lastUpdated"]
+    },
+    "ServiceOrder": {
+      "title": "ServiceOrder",
+      "description": "Service orders and sales transactions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "plateNumber": { "type": "string" },
+        "motorModel": { "type": "string" },
+        "complaint": { "type": "string" },
+        "mechanicId": { "type": "string" },
+        "mechanicName": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "completedAt": { "type": "string" },
+        "labors": { "type": "array" },
+        "parts": { "type": "array" },
+        "subtotalLabor": { "type": "number" },
+        "subtotalParts": { "type": "number" },
+        "discount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "changeAmount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "dueDate": { "type": "string" },
+        "mechanicCommissionPercent": { "type": "number" },
+        "mechanicCommissionAmount": { "type": "number" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "customerName", "status", "createdAt", "updatedAt", "subtotalLabor", "subtotalParts", "discount", "totalAmount", "paidAmount", "changeAmount", "paymentStatus"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer profiles and vehicle history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "vehicles": { "type": "array" },
+        "totalVisits": { "type": "number" },
+        "totalSpent": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "vehicles", "totalVisits", "totalSpent", "createdAt"]
+    },
+    "WholesaleCustomer": {
+      "title": "WholesaleCustomer",
+      "description": "Wholesale workshop and store partner accounts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "contactPerson": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "discountPercent": { "type": "number" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "createdAt"]
+    },
+    "PresetLabor": {
+      "title": "PresetLabor",
+      "description": "Preset labor service pricing packages",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "category"]
+    },
+    "Employee": {
+      "title": "Employee",
+      "description": "Staff, mechanics, and technicians",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "dailyBaseSalary": { "type": "number" },
+        "commissionRateLabor": { "type": "number" },
+        "joinDate": { "type": "string" },
+        "status": { "type": "string" },
+        "bankInfo": { "type": "string" }
+      },
+      "required": ["id", "name", "phone", "role", "dailyBaseSalary", "commissionRateLabor", "joinDate", "status"]
+    },
+    "EmployeeLoan": {
+      "title": "EmployeeLoan",
+      "description": "Employee loans and repayments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "employeeName": { "type": "string" },
+        "type": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "employeeId", "employeeName", "type", "amount", "date", "createdAt"]
+    },
+    "PayrollRecord": {
+      "title": "PayrollRecord",
+      "description": "Recap of payroll disbursements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "employeeName": { "type": "string" },
+        "employeeRole": { "type": "string" },
+        "periodStart": { "type": "string" },
+        "periodEnd": { "type": "string" },
+        "paidAt": { "type": "string" },
+        "daysWorked": { "type": "number" },
+        "totalBaseSalary": { "type": "number" },
+        "totalCommission": { "type": "number" },
+        "bonus": { "type": "number" },
+        "deductions": { "type": "number" },
+        "netTotal": { "type": "number" },
+        "paymentMethod": { "type": "string" }
+      },
+      "required": ["id", "employeeId", "employeeName", "employeeRole", "periodStart", "periodEnd", "paidAt", "netTotal", "paymentMethod"]
+    },
+    "ShopSettings": {
+      "title": "ShopSettings",
+      "description": "Application and workshop settings",
+      "type": "object",
+      "properties": {
+        "shopName": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "shopTagline": { "type": "string" },
+        "address": { "type": "string" },
+        "city": { "type": "string" },
+        "phone": { "type": "string" },
+        "paperWidth": { "type": "string" },
+        "defaultLaborCommission": { "type": "number" },
+        "autoPrintReceipt": { "type": "boolean" },
+        "logoUrl": { "type": "string" }
+      },
+      "required": ["shopName", "ownerName", "address", "city", "phone", "paperWidth", "defaultLaborCommission", "autoPrintReceipt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System and reminder notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "isRead": { "type": "boolean" }
+      },
+      "required": ["id", "type", "title", "message", "timestamp", "isRead"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User accounts with roles and permissions"
+    },
+    "/spareparts/{sparepartId}": {
+      "schema": "Sparepart",
+      "description": "Inventory spareparts and oils"
+    },
+    "/service_orders/{orderId}": {
+      "schema": "ServiceOrder",
+      "description": "Service orders and sales transactions"
+    },
+    "/archived_orders/{orderId}": {
+      "schema": "ServiceOrder",
+      "description": "Archived service orders and past records"
+    },
+    "/customers/{customerId}": {
+      "schema": "Customer",
+      "description": "Customer records and vehicles"
+    },
+    "/wholesale_customers/{customerId}": {
+      "schema": "WholesaleCustomer",
+      "description": "Wholesale workshop and store partners"
+    },
+    "/preset_labors/{laborId}": {
+      "schema": "PresetLabor",
+      "description": "Preset labor service pricing packages"
+    },
+    "/employees/{employeeId}": {
+      "schema": "Employee",
+      "description": "Staff, mechanics, and technicians"
+    },
+    "/employee_loans/{loanId}": {
+      "schema": "EmployeeLoan",
+      "description": "Employee loans and repayments"
+    },
+    "/payroll_records/{recordId}": {
+      "schema": "PayrollRecord",
+      "description": "Recap of payroll disbursements"
+    },
+    "/settings/{settingId}": {
+      "schema": "ShopSettings",
+      "description": "Application and workshop settings"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "System and reminder notifications"
+    }
+  }
+}
