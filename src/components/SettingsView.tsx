@@ -43,7 +43,8 @@ import shopLogo from '../assets/images/joyoboyo_logo_1785722496730.jpg';
 import { ThermalPrintModal } from './ThermalPrintModal';
 import { formatRupiah } from '../lib/storage';
 import { DEFAULT_PRESET_LABORS } from '../data/mockData';
-import { compressLogoImage } from '../lib/firestoreService';
+import { compressLogoImage, testFirestoreConnection } from '../lib/firestoreService';
+import { firebaseConfig, firestoreDbId } from '../lib/firebase';
 import { UserManagementSection } from './settings/UserManagementSection';
 import { BackupRestoreSection } from './settings/BackupRestoreSection';
 import { AuditLogSection } from './settings/AuditLogSection';
@@ -84,6 +85,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [isSaved, setIsSaved] = useState(false);
   const [isSyncingCloud, setIsSyncingCloud] = useState(false);
   const [cloudSyncResult, setCloudSyncResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isTestingConn, setIsTestingConn] = useState(false);
+  const [testConnResult, setTestConnResult] = useState<{ success: boolean; message: string } | null>(null);
+
+  const handleTestConnection = async () => {
+    setIsTestingConn(true);
+    setTestConnResult(null);
+    try {
+      const res = await testFirestoreConnection();
+      setTestConnResult({
+        success: res.success,
+        message: res.message,
+      });
+    } catch (err: any) {
+      setTestConnResult({
+        success: false,
+        message: err.message || 'Koneksi gagal.',
+      });
+    } finally {
+      setIsTestingConn(false);
+    }
+  };
 
   // Users management state inside settings
   const [userList, setUserList] = useState<UserAccount[]>([...users]);
@@ -1488,38 +1510,78 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </div>
               <div>
                 <h3 className="font-bold text-slate-100 text-sm sm:text-base flex items-center gap-2">
-                  Sinkronisasi Cloud Firestore
+                  Sinkronisasi Cloud Firestore & Akses Online
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     Realtime Active
                   </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Database terhubung ke Cloud Firestore. Data yang diedit di proyek akan tersinkronisasi otomatis ke link web publish.
+                  Database terhubung langsung ke Cloud Firestore. Siap digunakan online di Vercel, GitHub, maupun perangkat manapun secara real-time.
                 </p>
               </div>
             </div>
 
-            {onSyncAllToCloud && (
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
               <button
                 type="button"
-                disabled={isSyncingCloud}
-                onClick={handleTriggerCloudSync}
-                className="px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:bg-orange-500/50 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-orange-500/20 cursor-pointer transition-all self-start sm:self-auto"
+                disabled={isTestingConn}
+                onClick={handleTestConnection}
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+                title="Periksa konektivitas langsung ke Firebase Firestore"
               >
-                {isSyncingCloud ? (
+                {isTestingConn ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Sedang Menyinkronkan Data...
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-400" />
+                    <span>Menguji Ping...</span>
                   </>
                 ) : (
                   <>
-                    <RefreshCw className="w-4 h-4" />
-                    Unggah & Sinkronkan Semua Data ke Cloud
+                    <Database className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Tes Koneksi Firestore</span>
                   </>
                 )}
               </button>
-            )}
+
+              {onSyncAllToCloud && (
+                <button
+                  type="button"
+                  disabled={isSyncingCloud}
+                  onClick={handleTriggerCloudSync}
+                  className="px-4 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:bg-orange-500/50 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-orange-500/20 cursor-pointer transition-all"
+                >
+                  {isSyncingCloud ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sedang Menyinkronkan...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-4 h-4" />
+                      Unggah Semua Data ke Cloud
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
+
+          {/* Test Connection Result Alert */}
+          {testConnResult && (
+            <div
+              className={`p-3.5 rounded-xl text-xs font-bold flex items-center gap-2.5 transition-all ${
+                testConnResult.success
+                  ? 'bg-emerald-950/80 border border-emerald-600 text-emerald-300'
+                  : 'bg-red-950/80 border border-red-600 text-red-300'
+              }`}
+            >
+              {testConnResult.success ? (
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              ) : (
+                <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+              )}
+              <span>{testConnResult.message}</span>
+            </div>
+          )}
 
           {cloudSyncResult && (
             <div
@@ -1538,22 +1600,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300">
             <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
               <span className="font-bold text-orange-400 flex items-center gap-1.5">
-                <Database className="w-3.5 h-3.5" /> Penyimpanan Multi-Device
+                <Database className="w-3.5 h-3.5" /> Database Firestore
               </span>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                Setiap transaksi servis baru, update stok sparepart, data pelanggan, gaji, dan pengaturan bengkel disimpan langsung di Cloud.
+              <p className="text-[11px] font-mono text-slate-400 truncate" title={firestoreDbId}>
+                ID: {firestoreDbId}
               </p>
+              <p className="text-[10px] text-slate-500">Project: {firebaseConfig.projectId}</p>
             </div>
 
             <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
               <span className="font-bold text-emerald-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Sinkronisasi URL Publish
+                <CheckCircle2 className="w-3.5 h-3.5" /> Siap Online & Vercel
               </span>
               <p className="text-[11px] text-slate-400 leading-relaxed">
-                Saat membuka URL publish (shared app), data langsung terbaca real-time dari database cloud tanpa perlu input ulang.
+                Terkonfigurasi dengan SPA rewrite (<code className="text-orange-300">vercel.json</code>). Refresh halaman di Vercel tidak akan 404.
+              </p>
+            </div>
+
+            <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800 space-y-1">
+              <span className="font-bold text-cyan-400 flex items-center gap-1.5">
+                <Smartphone className="w-3.5 h-3.5" /> Akses Multi-Device
+              </span>
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                Dapat dibuka di HP, Tablet kasir, maupun laptop admin dengan pembaruan data otomatis detik per detik.
               </p>
             </div>
           </div>

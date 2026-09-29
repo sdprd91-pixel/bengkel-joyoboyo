@@ -570,3 +570,33 @@ export async function seedInitialFirestoreDataIfEmpty(): Promise<void> {
     isSeedingInProgress = false;
   }
 }
+
+// Quick Online Ping Test for Cloud Firestore Connection
+export async function testFirestoreConnection(): Promise<{ success: boolean; latencyMs: number; message: string }> {
+  const start = Date.now();
+  try {
+    const docRef = doc(db, COLLECTIONS.SETTINGS, 'current');
+    const snap = await getDoc(docRef);
+    const latency = Date.now() - start;
+    if (snap.exists()) {
+      return {
+        success: true,
+        latencyMs: latency,
+        message: `Terhubung online ke Cloud Firestore (respon ${latency}ms). Database aktif & sinkron.`,
+      };
+    } else {
+      return {
+        success: true,
+        latencyMs: latency,
+        message: `Terhubung online ke Cloud Firestore (respon ${latency}ms). Koleksi siap digunakan.`,
+      };
+    }
+  } catch (err: any) {
+    return {
+      success: false,
+      latencyMs: Date.now() - start,
+      message: `Gagal terhubung ke Cloud Firestore: ${err?.message || 'Periksa koneksi internet Anda.'}`,
+    };
+  }
+}
+
